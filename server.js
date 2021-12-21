@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const app = express();
+const Article = require("./models/article");
+const methodOverride = require("method-override");
 const articleRouter = require("./routes/articles");
-
+const app = express();
 // this single line connects you to the database - can be named whatever you want.
 mongoose.connect("mongodb://localhost/blog", {
   useNewUrlParser: true,
@@ -12,21 +13,12 @@ mongoose.connect("mongodb://localhost/blog", {
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
-
-app.get("/", (req, res) => {
+// this will allow us to override the method and call things like 'delete'
+app.use(methodOverride("_method"));
+app.get("/", async (req, res) => {
   // passing articles into the res.render
-  const articles = [
-    {
-      title: "Test Article",
-      createdAt: new Date(),
-      description: "Test description",
-    },
-    {
-      title: "Test Article2",
-      createdAt: new Date(),
-      description: "Test2 description",
-    },
-  ];
+  const articles = await Article.find().sort({ createdAt: "desc" });
+
   res.render("articles/index", { articles: articles });
 });
 
