@@ -4,7 +4,7 @@ const app = express();
 const articleRouter = require("./routes/articles");
 
 // this single line connects you to the database - can be named whatever you want.
-mongoose.connect("mongodb://localhose/blog", {
+mongoose.connect("mongodb://localhost/blog", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
